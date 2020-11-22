@@ -9,13 +9,6 @@ except ImportError as args:
     print("Import Error:", args)
     exit(1)
 
-DATABASE_NAME = "291db"
-COLLECTION_NAMES = {
-    "tags": "Tags.json",
-    "posts": "Posts.json",
-    "votes": "Votes.json"
-}
-
 
 def populateColl(db, collectionName, jsonFile):
     collection = db[collectionName]
@@ -28,11 +21,11 @@ def populateColl(db, collectionName, jsonFile):
     return collection
 
 
-def resetDB(client):
-    print("Resetting " + DATABASE_NAME + " database...")
+def LoadJSON(client):
+    print("Resetting " + "291db" + " database...")
     startTime = time.time()
 
-    db = client[DATABASE_NAME]
+    db = client["291db"]
 
     collections = ['posts', 'tags', 'votes']
     files = ['Posts.json', 'Tags.json', 'Votes.json']
@@ -48,11 +41,15 @@ def connectDatabase(port):
     os.system('clear')
     try:
         client = MongoClient(port=port)
-        if DATABASE_NAME in client.list_database_names():
-            client.drop_database(DATABASE_NAME)
-        resetDB(client)
+
+        # Drop database if already exists
+        if "291db" in client.list_database_names():
+            client.drop_database("291db")
+
+        #
+        LoadJSON(client)
     except:
-        print("Connection failed, try again")
+        print("Reset Failed, try again. Hint: Make sure .json files are present in phase1.py directory")
 
 
 if __name__ == "__main__":
