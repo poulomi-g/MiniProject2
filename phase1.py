@@ -26,7 +26,7 @@ def populateColl(db, collectionName, jsonFile):
 
 
 def LoadJSON(client):
-    print("Resetting " + "291db" + " database...")
+    print("Loading...")
     startTime = time.time()
 
     db = client["291db"]
