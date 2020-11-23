@@ -15,6 +15,7 @@ def userReport(db, user):
     print("User report for: " + str(user))
 
     allPosts = db['posts']
+    allVotes = db['votes']
 
     user = str(user)
 
@@ -24,10 +25,31 @@ def userReport(db, user):
             "$sum": 1}, "avg": {"$avg": "$Score"}}}
     ])
 
+    answer_stats = allPosts.aggregate([
+        {"$match": {"$and": [{"PostTypeId": "2"}, {"OwnerUserId": user}]}},
+        {"$group": {"_id": "$OwnerUserId", "count": {
+            "$sum": 1}, "avg": {"$avg": "$Score"}}}
+    ])
+
+    vote_stats = allVotes.aggregate([
+        {"$match": {"UserId": user}},
+        {"$group": {"_id": "$UserId", "count": {
+            "$sum": 1}}}
+    ])
+
     for i in question_stats:
         print('************************************')
         print("Number of questions: " + str(i['count']))
-        print("Average votes: " + str(i['avg']))
+        print("Average question votes: " + str(i['avg']))
         print('************************************')
 
-    return
+    for i in answer_stats:
+        print('************************************')
+        print("Number of answers: " + str(i['count']))
+        print("Average answer votes: " + str(i['avg']))
+        print('************************************')
+
+    for i in vote_stats:
+        print("No. of votes casted of all types: " + str(i['count']))
+
+    return True
