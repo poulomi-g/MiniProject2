@@ -38,18 +38,18 @@ def userReport(db, user):
     ])
 
     for i in question_stats:
-        print('************************************')
+        print('-----------------------------------------')
         print("Number of questions: " + str(i['count']))
         print("Average question votes: " + str(i['avg']))
-        print('************************************')
 
     for i in answer_stats:
-        print('************************************')
+        print('')
         print("Number of answers: " + str(i['count']))
         print("Average answer votes: " + str(i['avg']))
-        print('************************************')
 
     for i in vote_stats:
+        print('')
         print("No. of votes casted of all types: " + str(i['count']))
 
+    print('-----------------------------------------')
     return True
