@@ -4,19 +4,20 @@ try:
     import time
     import os
     from pymongo import MongoClient
+    from userReport import userReport
 
 except ImportError as args:
     print("Import Error:", args)
     exit(1)
 
 
-def menu():
+def menu(db):
     while True:
 
         print("********************************")
         print("")
-        print("1. Register")
-        print("2. Login")
+        print("1. Continue with user id: ")
+        print("2. Continue without user id: ")
         print("3. Exit")
         print("")
         print("********************************")
@@ -33,16 +34,19 @@ def menu():
         # If input integer:
 
         if action == 1:
-            register()
-            return
+            os.system('clear')
+            user = input("Enter user id: ")
+            userReport(db, user)
+            actions(db, user)
+            break
 
         elif action == 2:
-            login()
-            return
+            actions(db)
+            break
 
         elif action == 3:
             print("Exiting...")
-            return
+            break
 
         else:
             os.system('clear')
@@ -54,15 +58,16 @@ def connectDatabase(port, startTime):
     os.system('clear')
     try:
         client = MongoClient(port=port)
+        db = client['291db']
 
         print("Successfully connected to server on port: " + str(port))
 
-        menu()
+        menu(db)
 
         return
 
     except:
-        print("Connection failed")
+        print("Something went wrong, try again")
 
 
 if __name__ == "__main__":

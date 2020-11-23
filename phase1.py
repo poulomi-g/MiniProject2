@@ -37,6 +37,8 @@ def LoadJSON(client):
     for i in range(3):
         populateColl(db, collections[i], files[i])
 
+    return db
+
 
 def connectDatabase(port, startTime):
     os.system('clear')
@@ -46,7 +48,7 @@ def connectDatabase(port, startTime):
         if "291db" in client.list_database_names():
             client.drop_database("291db")
 
-        LoadJSON(client)
+        db = LoadJSON(client)
         finalTime = time.time() - startTime
         print("Time taken to load JSON data: ")
         print(finalTime)
