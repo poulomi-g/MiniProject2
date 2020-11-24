@@ -5,6 +5,7 @@ try:
     import os
     from pymongo import MongoClient
     from question import postQuestion
+    from search import searchQuestion
 
 except ImportError as args:
     print("Import Error:", args)
@@ -19,7 +20,7 @@ def actionsMenu(db, user):
         print("")
         print("1. Post a question")
         print("2. Search for questions")
-        print("3. Exit")
+        print("3. Go Back")
         print("")
         print('-----------------------------------------')
         print("")
@@ -37,3 +38,8 @@ def actionsMenu(db, user):
 
         if int(action) == 3:
             break
+
+        if int(action) == 2:
+            result = searchQuestion(db, user)
+
+            continue

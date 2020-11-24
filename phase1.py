@@ -49,6 +49,7 @@ def connectDatabase(port, startTime):
             client.drop_database("291db")
 
         db = LoadJSON(client)
+
         finalTime = time.time() - startTime
         print("Time taken to load JSON data: ")
         print(finalTime)
