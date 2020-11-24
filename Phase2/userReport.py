@@ -52,4 +52,5 @@ def userReport(db, user):
         print("No. of votes casted of all types: " + str(i['count']))
 
     print('-----------------------------------------')
-    return True
+
+    return

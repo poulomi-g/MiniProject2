@@ -5,6 +5,7 @@ try:
     import os
     from pymongo import MongoClient
     from userReport import userReport
+    from actions import actionsMenu
 
 except ImportError as args:
     print("Import Error:", args)
@@ -14,13 +15,13 @@ except ImportError as args:
 def menu(db):
     while True:
 
-        print("********************************")
+        print('-----------------------------------------')
         print("")
         print("1. Continue with user id: ")
         print("2. Continue without user id: ")
         print("3. Exit")
         print("")
-        print("********************************")
+        print('-----------------------------------------')
         print("")
         action = input("Choose from one of the above: ")
 
@@ -33,18 +34,21 @@ def menu(db):
 
         # If input integer:
 
-        if action == 1:
+        if int(action) == 1:
             os.system('clear')
             user = input("Enter user id: ")
             userReport(db, user)
-            actions(db, user)
-            break
 
-        elif action == 2:
-            actions(db)
-            break
+            actionsMenu(db, user)
+            os.system('clear')
+            continue
 
-        elif action == 3:
+        elif int(action) == 2:
+            actionsMenu(db, False)
+            os.system('clear')
+            continue
+
+        elif int(action) == 3:
             print("Exiting...")
             break
 
@@ -53,33 +57,31 @@ def menu(db):
             print("Input not available! Try again")
             continue
 
+    return True
+
 
 def connectDatabase(port, startTime):
     os.system('clear')
-    try:
-        client = MongoClient(port=port)
-        db = client['291db']
 
-        print("Successfully connected to server on port: " + str(port))
+    client = MongoClient(port=port)
+    db = client['291db']
 
-        menu(db)
+    print("Successfully connected to server on port: " + str(port))
 
-        return
+    menu(db)
 
-    except:
-        print("Something went wrong, try again")
+    print("Something went wrong, try again")
 
 
 if __name__ == "__main__":
-    try:
-        if len(sys.argv[1]) == 5:
-            startTime = time.time()
-            port = int(sys.argv[1])
-            connectDatabase(port, startTime)
 
-        else:
-            exit(0)
+    if len(sys.argv[1]) == 5:
+        startTime = time.time()
+        port = int(sys.argv[1])
+        connectDatabase(port, startTime)
 
-    except:
-        print("Invalid command, try the following format: ")
-        print("python Phase2/phase2.py <port no.> if working from root project directory")
+    else:
+        exit(0)
+
+    print("Invalid command, try the following format: ")
+    print("python Phase2/phase2.py <port no.> if working from root project directory")
