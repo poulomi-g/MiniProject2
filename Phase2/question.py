@@ -63,7 +63,7 @@ def updateTags(tags, db):
             }
 
             allTags.insert_one(newTag)
-            print("Tag added")
+            # print("Tag added")
 
         else:
             allTags.update({"TagName": i}, {"$inc": {"Count": 1}})
@@ -91,7 +91,15 @@ def postQuestion(db, user):
         print("ADD A QUESTION")
         print('-----------------------------------------')
         title = input("Title: ")
+        if not title:
+            os.system('clear')
+            print('Title cannot be empty!')
+            continue
         body = input("Body: ")
+        if not body:
+            os.system('clear')
+            print('Title cannot be empty!')
+            continue
         tags = input("Tags (Separated by space): ")
         formattedTags = generateTags(tags)
         crdate = str(datetime.now().date())
@@ -113,44 +121,50 @@ def postQuestion(db, user):
         if confirmation == 'n':
             return False
 
-        if not user:
-            postDict = {
-                "Id": pid,
-                "PostTypeId": "1",
-                "CreationDate": crdate,
-                "Score": 0,
-                "ViewCount": 0,
-                "Body": body,
-                "Title": title,
-                "AnswerCount": 0,
-                "CommentCount": 0,
-                "ContentLicense": "CC BY-SA 2.5"
-            }
+        elif confirmation == 'y':
+            if not user:
+                postDict = {
+                    "Id": pid,
+                    "PostTypeId": "1",
+                    "CreationDate": crdate,
+                    "Score": 0,
+                    "ViewCount": 0,
+                    "Body": body,
+                    "Title": title,
+                    "AnswerCount": 0,
+                    "CommentCount": 0,
+                    "ContentLicense": "CC BY-SA 2.5"
+                }
+
+            else:
+                postDict = {
+                    "Id": pid,
+                    "PostTypeId": "1",
+                    "CreationDate": crdate,
+                    "Score": 0,
+                    "ViewCount": 0,
+                    "Body": body,
+                    "OwnerUserId": user,
+                    "Title": title,
+                    "AnswerCount": 0,
+                    "CommentCount": 0,
+                    "ContentLicense": "CC BY-SA 2.5"
+                }
+
+            if formattedTags != '':
+                postDict['Tags'] = formattedTags
+
+                updateTags(tags.split(), db)
+
+            allPosts = db['posts']
+
+            allPosts.insert_one(postDict)
+
+            return True
 
         else:
-            postDict = {
-                "Id": pid,
-                "PostTypeId": "1",
-                "CreationDate": crdate,
-                "Score": 0,
-                "ViewCount": 0,
-                "Body": body,
-                "OwnerUserId": user,
-                "Title": title,
-                "AnswerCount": 0,
-                "CommentCount": 0,
-                "ContentLicense": "CC BY-SA 2.5"
-            }
-
-        if formattedTags != '':
-            postDict['Tags'] = formattedTags
-
-            updateTags(tags.split(), db)
-
-        allPosts = db['posts']
-
-        allPosts.insert_one(postDict)
-
-        return True
+            os.system('clear')
+            print("Invalid entry")
+            return False
 
     return

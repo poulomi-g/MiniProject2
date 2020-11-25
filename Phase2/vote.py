@@ -104,4 +104,5 @@ def voteAnswer(db, user, pid):
 
             else:
                 os.system('clear')
+                print('Already voted this post!')
                 return False

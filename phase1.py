@@ -45,6 +45,7 @@ def connectDatabase(port, startTime):
     try:
         client = MongoClient(port=port)
 
+        print("Dropping existing database if any...")
         if "291db" in client.list_database_names():
             client.drop_database("291db")
 
@@ -53,6 +54,14 @@ def connectDatabase(port, startTime):
         finalTime = time.time() - startTime
         print("Time taken to load JSON data: ")
         print(finalTime)
+
+        print("Adding text indexing for search...")
+        posts = db['posts']
+        posts.create_index(
+            [('Title', 'text'), ('Body', 'text'), ('Tags', 'text')])
+        print("Done")
+        finalfinaltime = time.time() - startTime
+        print("Time taken in total: " + str(finalfinaltime))
 
     except:
         print("Error, database could not be remade. Hint: Make sure .json files are present in phase1.py directory")

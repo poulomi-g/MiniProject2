@@ -11,13 +11,16 @@ except ImportError as args:
 
 
 def userReport(db, user):
-    os.system('clear')
     print("User report for: " + str(user))
 
     allPosts = db['posts']
     allVotes = db['votes']
 
     user = str(user)
+
+    if not user:
+        os.system('clear')
+        print("User cannot be empty")
 
     question_stats = allPosts.aggregate([
         {"$match": {"$and": [{"PostTypeId": "1"}, {"OwnerUserId": user}]}},

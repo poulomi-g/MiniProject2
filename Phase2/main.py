@@ -37,6 +37,23 @@ def menu(db):
         if int(action) == 1:
             os.system('clear')
             user = input("Enter user id: ")
+            if not user:
+                os.system('clear')
+                print("User cannot be empty")
+                continue
+
+            if user.isdigit():
+                print(
+                    "Note: If given user does not exist then no report will be generated")
+                print(
+                    "However, all actions post actions will take place under user" + str(user))
+
+            else:
+                os.system('clear')
+                print(
+                    "User must be digit, you have been logged in anonymously. Please go back to link user if required.")
+                continue
+
             userReport(db, user)
 
             actionsMenu(db, user)
@@ -44,12 +61,15 @@ def menu(db):
             continue
 
         elif int(action) == 2:
+            os.system('clear')
             actionsMenu(db, False)
             os.system('clear')
             continue
 
         elif int(action) == 3:
+            os.system('clear')
             print("Exiting...")
+            time.sleep(1)
             break
 
         else:

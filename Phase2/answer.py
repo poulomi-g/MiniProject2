@@ -19,14 +19,21 @@ def addAnswer(db, pid, user):
         print("ADD AN ANSWER TO POST " + pid)
         print('-----------------------------------------')
         body = input("Body: ")
+
+        if not body:
+            os.system('clear')
+            print("Body cannot be empty!")
+            continue
+
         crdate = str(datetime.now().date())
         apid = str(generatePostID(db))
-        if user:
-            poster = user
         os.system('clear')
 
         print("THE FOLLOWING QUESTION WILL BE ADDED: ")
         print('-----------------------------------------')
+        if user:
+            poster = user
+            print("User: " + poster)
         print("Body: " + body)
         print("Post ID: " + apid)
         print("Date: " + crdate)
@@ -128,9 +135,14 @@ def listAnswers(db, pid, user):
     displayAnswer(db, list(matchingAnswers), list(questionPost))
 
     action = input(
-        'Enter answer you want to vote (Press enter to return to menu: ')
+        'Enter answer id you want to vote (Press enter to return to menu: ')
 
     if action == '':
+        return False
+
+    elif not action.isdigit():
+        os.system('clear')
+        print("Answer id must be an integer")
         return False
 
     else:
@@ -139,9 +151,11 @@ def listAnswers(db, pid, user):
         allPosts.update({"Id": str(action)}, {"$inc": {"ViewCount": 1}})
 
         if not result:
+            os.system('clear')
             print("Vote didnt go through")
 
         else:
+            os.system('clear')
             print("Vote successful")
 
     return

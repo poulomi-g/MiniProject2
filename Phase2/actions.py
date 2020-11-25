@@ -30,16 +30,25 @@ def actionsMenu(db, user):
             result = postQuestion(db, user)
 
             if not result:
+                os.system('clear')
                 print('Question not posted')
 
             else:
+                os.system('clear')
                 print('Question posted!')
             continue
 
-        if int(action) == 3:
+        elif int(action) == 3:
             break
 
-        if int(action) == 2:
+        elif int(action) == 2:
             result = searchQuestion(db, user)
 
+            os.system('clear')
+
+            continue
+
+        else:
+            os.system('clear')
+            print("Invalid response")
             continue
