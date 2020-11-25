@@ -69,7 +69,7 @@ def menu(db):
         elif int(action) == 3:
             os.system('clear')
             print("Exiting...")
-            time.sleep(1)
+            time.sleep(3)
             break
 
         else:

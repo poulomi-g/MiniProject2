@@ -129,7 +129,7 @@ def searchActionSelector(db, user):
         print("Results cleared")
         return
 
-    if not action.isdigit():
+    elif not action.isdigit():
         os.system('clear')
         print("Post id must be an integer")
         return
@@ -139,9 +139,9 @@ def searchActionSelector(db, user):
     pid = action
 
     # Check if post exists:
-    try:
-        matchingPost = allPosts.find_one({"Id": str(pid)})
-    except:
+    matchingPost = allPosts.find_one({"Id": str(pid)})
+
+    if not matchingPost:
         os.system('clear')
         print("no such post!")
         return

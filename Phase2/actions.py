@@ -44,8 +44,6 @@ def actionsMenu(db, user):
         elif int(action) == 2:
             result = searchQuestion(db, user)
 
-            os.system('clear')
-
             continue
 
         else:
