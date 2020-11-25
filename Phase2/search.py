@@ -84,12 +84,14 @@ def questionActionMenu(db, user, pid):
 
 def displayQuestion(matches):
     for i in matches:
-        print('-----------------------------------------')
-        print('Title: ' + str(i['Title']))
-        print('Body: ' + str(i['Body']))
-        print('Creation date: ' + str(i['CreationDate']))
-        print('Score: ' + str(i['Score']))
-        print('Answer Count: ' + str(i['AnswerCount']))
+        if i['PostTypeId'] == "1":
+            print('-----------------------------------------')
+            print('Id: ' + str(i['Id']))
+            print('Title: ' + str(i['Title']))
+            print('Body: ' + str(i['Body']))
+            print('Creation date: ' + str(i['CreationDate']))
+            print('Score: ' + str(i['Score']))
+            print('Answer Count: ' + str(i['AnswerCount']))
 
     print('-----------------------------------------')
     print("End of results")

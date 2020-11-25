@@ -74,6 +74,48 @@ def addAnswer(db, pid, user):
     return
 
 
+def displayAnswer(db, matches, questionPost):
+    # Separately print the accepted answer first and store its id:
+    allPosts = db['posts']
+    try:
+        for j in questionPost:
+            acceptedAnswerId = j['AcceptedAnswerId']
+
+        allPosts = db['posts']
+        acceptedAnswer = allPosts.find({"Id": str(acceptedAnswerId)})
+
+        for i in acceptedAnswer:
+            print("* ACCEPTED ANSWER")
+            print('-----------------------------------------')
+            print('Id: ' + str(i['Id']))
+            if len(str(i['Body'])) < 80:
+                print('Body: ' + str(i['Body']))
+            else:
+                print('Body: ' + str(i['Body'])[:80])
+            print('Creation date: ' + str(i['CreationDate']))
+            print('Score: ' + str(i['Score']))
+
+    except:
+        print("NO ACCEPTED ANSWERS YET")
+        AcceptedAnswerId = None
+
+    # Post the rest
+    for i in matches:
+
+        if str(i['Id']) != str(AcceptedAnswerId):
+            print('-----------------------------------------')
+            print('Id: ' + str(i['Id']))
+            if len(str(i['Body'])) < 80:
+                print('Body: ' + str(i['Body']))
+            else:
+                print('Body: ' + str(i['Body'])[:80])
+            print('Creation date: ' + str(i['CreationDate']))
+            print('Score: ' + str(i['Score']))
+    print('-----------------------------------------')
+    print("End of results")
+    return
+
+
 def listAnswers(db, pid, user):
     print("Listing answers for: " + str(pid))
     print('-----------------------------------------')
@@ -81,11 +123,9 @@ def listAnswers(db, pid, user):
     allPosts = db['posts']
 
     matchingAnswers = allPosts.find({"ParentId": pid})
+    questionPost = allPosts.find({"Id": pid})
 
-    print(list(matchingAnswers))
-
-    # TODO display answers properly
-    # TODO limit initial display to 80 characters
+    displayAnswer(db, list(matchingAnswers), list(questionPost))
 
     action = input(
         'Enter answer you want to vote (Press enter to return to menu: ')
