@@ -4,10 +4,96 @@ try:
     import time
     import os
     from pymongo import MongoClient
+    from answer import addAnswer, listAnswers
+    from vote import voteAnswer
 
 except ImportError as args:
     print("Import Error:", args)
     exit(1)
+
+
+def questionActionMenu(db, user, pid):
+
+    print('-----------------------------------------')
+    print('Question actions for post no.: ' + pid)
+    allPosts = db['posts']
+
+    matches = allPosts.find({"Id": str(pid)})
+
+    for i in list(matches):
+        print('-----------------------------------------')
+        print('_id: ' + str(i['_id']))
+        print('id: ' + str(i['Id']))
+        print('Post Type ID: ' + str(i['PostTypeId']))
+        print('View Count: ' + str(i['ViewCount']))
+        print('Comment Count: ' + str(i['CommentCount']))
+        print()
+        print('Title: ' + str(i['Title']))
+        print('Body: ' + str(i['Body']))
+        print('Creation date: ' + str(i['CreationDate']))
+        print('Score: ' + str(i['Score']))
+        print('Answer Count: ' + str(i['AnswerCount']))
+        print('Content License: ' + str(i['ContentLicense']))
+        print('-----------------------------------------')
+
+    # Update view count
+    allPosts.update({"Id": str(pid)}, {"$inc": {"ViewCount": 1}})
+
+    print('1. Answer')
+    print('2. List answers')
+    print('3. Vote this question')
+    print('4. Back')
+
+    action = input("Choose from one of the above: ")
+
+    if int(action) == 1:
+        os.system('clear')
+        result = addAnswer(db, pid, user)
+
+        if result:
+            os.system('clear')
+            print("Answer added!")
+
+            return
+
+        else:
+            print("Answer not added")
+            return
+
+    elif int(action) == 2:
+        os.system('clear')
+        result = listAnswers(db, pid, user)
+        return
+
+    elif int(action) == 3:
+        result = voteAnswer(db, user, pid)
+
+        if result:
+            os.system('clear')
+            print('Question voted!')
+            return
+
+        else:
+            os.system('clear')
+            print('Vote did not go through')
+            return
+
+    elif int(action) == 4:
+        return
+
+
+def displayQuestion(matches):
+    for i in matches:
+        print('-----------------------------------------')
+        print('Title: ' + str(i['Title']))
+        print('Body: ' + str(i['Body']))
+        print('Creation date: ' + str(i['CreationDate']))
+        print('Score: ' + str(i['Score']))
+        print('Answer Count: ' + str(i['AnswerCount']))
+
+    print('-----------------------------------------')
+    print("End of results")
+    return
 
 
 def findQuestion(db, keywords):
@@ -20,8 +106,69 @@ def findQuestion(db, keywords):
     # TODO: display in a nice way
     matches = allPosts.find({"$text": {"$search": stringofkeywords}})
 
-    print(list(matches))
-    return matches
+    displayQuestion(list(matches))
+    return
+
+
+def searchActionSelector(db, user):
+    print('-----------------------------------------')
+    action = input(
+        "Choose a post by entering its id: (Press enter to go back)")
+
+    # TODO: Error checking
+
+    if action == '':
+        return
+    try:
+        pid = int(action)  # Checking if integer
+
+    except:
+        os.system('clear')
+        print('Not an integer')
+        return
+
+    allPosts = db['posts']
+
+    # Check if post exists:
+    matchingPost = allPosts.find_one({"Id": str(pid)})
+
+    if not list(matchingPost):
+        os.system('clear')
+        print("no such post!")
+
+    else:
+        if matchingPost['PostTypeId'] == "1":
+            questionActionMenu(db, user, str(pid))
+            return
+
+        else:
+            print('Selected post is an answer: ')
+            allPosts.update({"Id": str(pid)}, {"$inc": {"ViewCount": 1}})
+            print('View count updated')
+
+            # TODO: Display answer nicely
+
+            print(matchingPost)
+
+            action = input("Do you wish to vote this answer? [y/n]: ")
+
+            if action == 'n':
+                return
+
+            elif action == 'y':
+                result = voteAnswer(db, user, str(pid))
+
+                if result:
+                    os.system('clear')
+                    print("Voted")
+                    return
+
+                else:
+                    os.system('clear')
+                    print('Vote did not go through')
+                    return
+
+    return
 
 
 def searchQuestion(db, user):
@@ -41,6 +188,10 @@ def searchQuestion(db, user):
             # Conversion to set removes duplicates
             split_keywords = list(set(keywords.lower().split()))
 
-            matches = findQuestion(db, split_keywords)
+            findQuestion(db, split_keywords)
+
+            searchActionSelector(db, user)
+
+            break
 
     return True

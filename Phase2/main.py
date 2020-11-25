@@ -61,27 +61,33 @@ def menu(db):
 
 
 def connectDatabase(port, startTime):
-    os.system('clear')
 
-    client = MongoClient(port=port)
-    db = client['291db']
+    try:
+        os.system('clear')
 
-    print("Successfully connected to server on port: " + str(port))
+        client = MongoClient(port=port)
+        db = client['291db']
 
-    menu(db)
+        print("Successfully connected to server on port: " + str(port))
 
-    print("Something went wrong, try again")
+        menu(db)
+
+    except:
+        print("Something went wrong, try again")
 
 
 if __name__ == "__main__":
 
-    if len(sys.argv[1]) == 5:
-        startTime = time.time()
-        port = int(sys.argv[1])
-        connectDatabase(port, startTime)
+    try:
 
-    else:
-        exit(0)
+        if len(sys.argv[1]) == 5:
+            startTime = time.time()
+            port = int(sys.argv[1])
+            connectDatabase(port, startTime)
 
-    print("Invalid command, try the following format: ")
-    print("python Phase2/phase2.py <port no.> if working from root project directory")
+        else:
+            exit(0)
+
+    except:
+        print("Invalid command, try the following format: ")
+        print("python Phase2/phase2.py <port no.> if working from root project directory")
