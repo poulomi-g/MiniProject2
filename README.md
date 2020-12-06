@@ -1,4 +1,4 @@
-#MiniProject2
+# MiniProject2
 
 ## Collaborators:
 * Poulomi Ganguly (poulomi)
