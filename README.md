@@ -1,4 +1,4 @@
-# MiniProject2
+# Reddit Dtabase
 
 ## Collaborators:
 * Poulomi Ganguly (poulomi)
